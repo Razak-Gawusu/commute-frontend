@@ -2,10 +2,12 @@ import { NgIf } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
+import { ValdemortModule } from 'ngx-valdemort';
 
 @Component({
   selector: 'cm-input',
   standalone: true,
+  imports: [NgIf, LucideAngularModule, ReactiveFormsModule, ValdemortModule],
   template: `
     <div [formGroup]="formGroup" class="space-y-1">
       <label [for]="label" class="cursor-pointer"
@@ -34,9 +36,26 @@ import { LucideAngularModule } from 'lucide-angular';
           ></lucide-icon>
         </button>
       </div>
+      <val-errors errors [controlName]="name" [label]="label">
+        <ng-template valError="required">
+          <span class="text-xs text-red-500"> {{ label }} is required </span>
+        </ng-template>
+        <ng-template valError="email">
+          <span class="text-xs text-red-500">
+            The email must be a valid email address
+          </span>
+        </ng-template>
+        <ng-template
+          valError="max"
+          let-error="error"
+          class="text-xs text-red-500"
+          ><span class="text-xs text-red-500">
+            You must be at least {{ error.min }} years old
+          </span>
+        </ng-template>
+      </val-errors>
     </div>
   `,
-  imports: [NgIf, LucideAngularModule, ReactiveFormsModule],
 })
 export class InputComponent implements OnInit {
   @Input({ required: true }) name!: string;

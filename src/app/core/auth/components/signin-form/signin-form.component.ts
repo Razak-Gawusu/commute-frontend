@@ -1,13 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnChanges, SimpleChanges } from '@angular/core';
 import { ButtonComponent, InputComponent } from '../../../../shared/components';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../services';
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { FormSchema } from '../../../../utils';
 
 @Component({
   selector: 'cm-signin-form',
@@ -17,7 +16,10 @@ import { AuthService } from '../../services';
     ButtonComponent,
     ReactiveFormsModule,
     LucideAngularModule,
+    ButtonModule,
+    ToastModule,
   ],
+  providers: [MessageService],
   template: `<form
     (ngSubmit)="onLogin()"
     [formGroup]="loginForm"
@@ -39,6 +41,7 @@ import { AuthService } from '../../services';
 
     <cm-button
       [isLoading]="authService.signinMutation.isPending()"
+      [disabled]="loginForm.invalid"
       class="w-full"
       >Login</cm-button
     >
@@ -48,12 +51,16 @@ export class SigninFormComponent {
   authService: AuthService = inject(AuthService);
   loginForm: FormGroup<any>;
 
-  constructor() {
-    this.loginForm = this.authService.loginForm;
+  constructor(formSchema: FormSchema) {
+    this.loginForm = this.authService.generateForm([...formSchema.loginSchema]);
   }
 
   onLogin() {
     const { email, password } = this.loginForm.value;
-    this.authService.signinMutation.mutate({ email, password });
+
+    this.authService.signinMutation.mutate({
+      email: email!,
+      password: password!,
+    });
   }
 }
