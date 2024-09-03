@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SigninFormComponent } from '../../components';
 import { RouterLink } from '@angular/router';
 import { ForgotPasswordFormComponent } from '../../components/forget-password-form';
+import { FormGroup } from '@angular/forms';
+import { AuthService } from '../../services';
+import { FormSchemaService } from '../../../../shared';
 
 @Component({
   selector: 'cm-forgot-password',
@@ -15,7 +18,11 @@ import { ForgotPasswordFormComponent } from '../../components/forget-password-fo
       </p>
     </div>
 
-    <cm-forgot-password-form />
+    <cm-forgot-password-form
+      (forgotPasswordEvent)="onForgotPassword()"
+      [formGroup]="forgotPasswordForm"
+      [isLoading]="authService.forgotPasswordMutation.isPending()"
+    />
     <p class="text-gray-600 text-center">
       Remember password?
       <a
@@ -27,4 +34,21 @@ import { ForgotPasswordFormComponent } from '../../components/forget-password-fo
   </div>`,
   imports: [ForgotPasswordFormComponent, RouterLink],
 })
-export class ForgotPasswordPage {}
+export class ForgotPasswordPage {
+  forgotPasswordForm: FormGroup<any>;
+  authService: AuthService = inject(AuthService);
+
+  constructor(formSchema: FormSchemaService) {
+    this.forgotPasswordForm = formSchema.generateForm([
+      ...formSchema.forgotPasswordSchema,
+    ]);
+  }
+
+  onForgotPassword() {
+    const { email } = this.forgotPasswordForm.value;
+
+    this.authService.forgotPasswordMutation.mutate({
+      email: email!,
+    });
+  }
+}

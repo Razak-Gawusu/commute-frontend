@@ -1,12 +1,10 @@
-import { Component, inject, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ButtonComponent, InputComponent } from '../../../../shared/components';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
-import { AuthService } from '../../services';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { FormSchema } from '../../../../utils';
 
 @Component({
   selector: 'cm-signin-form',
@@ -22,45 +20,37 @@ import { FormSchema } from '../../../../utils';
   providers: [MessageService],
   template: `<form
     (ngSubmit)="onLogin()"
-    [formGroup]="loginForm"
+    [formGroup]="formGroup"
     class="grid gap-4"
   >
     <cm-input
       label="Email address"
       [required]="true"
       name="email"
-      [formGroup]="loginForm"
+      [formGroup]="formGroup"
     />
     <cm-input
       label="Password"
       [required]="true"
       type="password"
       name="password"
-      [formGroup]="loginForm"
+      [formGroup]="formGroup"
     />
 
     <cm-button
-      [isLoading]="authService.signinMutation.isPending()"
-      [disabled]="loginForm.invalid"
+      [isLoading]="isLoading"
+      [disabled]="formGroup.invalid"
       class="w-full"
       >Login</cm-button
     >
   </form>`,
 })
 export class SigninFormComponent {
-  authService: AuthService = inject(AuthService);
-  loginForm: FormGroup<any>;
-
-  constructor(formSchema: FormSchema) {
-    this.loginForm = this.authService.generateForm([...formSchema.loginSchema]);
-  }
+  @Input() formGroup!: FormGroup<any>;
+  @Input() isLoading!: boolean;
+  @Output() loginEvent = new EventEmitter();
 
   onLogin() {
-    const { email, password } = this.loginForm.value;
-
-    this.authService.signinMutation.mutate({
-      email: email!,
-      password: password!,
-    });
+    this.loginEvent.emit();
   }
 }

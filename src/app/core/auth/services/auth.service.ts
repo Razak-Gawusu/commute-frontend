@@ -8,15 +8,8 @@ import {
 } from '@tanstack/angular-query-experimental';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ContantService } from '../../../utils';
-import { UserService } from '../../../shared';
+import { ContantService, UserService } from '../../../shared';
 import { ToastrService } from 'ngx-toastr';
-
-type foB = {
-  name: string;
-  initialValue: string;
-  validators: any[];
-};
 
 @Injectable({
   providedIn: 'root',
@@ -39,51 +32,6 @@ export class AuthService {
     { name: 'role', label: 'Driver', value: 'driver', icon: 'carTaxiFront' },
   ];
 
-  registerForm = this.fb.group({
-    first_name: this.fb.control('', Validators.required),
-    last_name: this.fb.control('', Validators.required),
-    email: this.fb.control('', Validators.email),
-    password: this.fb.control('', Validators.required),
-    role: this.fb.control(''),
-  });
-
-  loginForm = this.fb.group({
-    email: this.fb.control('', Validators.required),
-    password: this.fb.control('', Validators.required),
-  });
-
-  forgotPasswordForm = this.fb.group({
-    email: this.fb.control('', Validators.required),
-  });
-
-  resetPasswordForm = this.fb.group({
-    password: this.fb.control('', Validators.required),
-    confirm_password: this.fb.control('', Validators.required),
-  });
-
-  createPasswordForm = this.fb.group({
-    new_password: this.fb.control('', Validators.required),
-    confirm_password: this.fb.control('', [Validators.required]),
-  });
-
-  verifyOTPForm = this.fb.group({
-    otp: this.fb.control('', Validators.required),
-  });
-
-  // generate form {name: string, initialValue: string, isRequired: boolean, errorMessage: string}[]
-
-  generateForm(arr: foB[]) {
-    const obj = Object.create({});
-
-    for (let item of arr) {
-      obj[item.name] = this.fb.control(item.initialValue || '', [
-        ...item.validators,
-      ]);
-    }
-
-    return this.fb.group({ ...obj }, { updateOn: 'blur' });
-  }
-
   signupMutation = injectMutation(() => ({
     mutationFn: (user: IUser) =>
       lastValueFrom(
@@ -98,8 +46,8 @@ export class AuthService {
       this.userService.authenticate(token);
       this.route.navigate([this.getRoute(this.userService.getRole())]);
     },
-    onError: (err) => {
-      this.toastr.error(err.message);
+    onError: (err: any) => {
+      this.toastr.error(err.error.message);
     },
   }));
 
@@ -122,67 +70,89 @@ export class AuthService {
     },
   }));
 
-  forgotPasswordMutation = injectMutation(() => ({
-    mutationFn: (data: { email: string }) =>
-      lastValueFrom(
-        this.http.post<{ data: any }>(
-          `${this.url}/api/v1/auth/send-reset-code`,
-          data
-        )
-      ),
-    onSuccess: (res) => {
-      console.log({ res });
-    },
-    onError: (err) => {
-      console.log({ err });
-    },
-  }));
+  forgotPasswordMutation = injectMutation(() => {
+    let email = '';
 
-  verifyOTPMutation = injectMutation(() => ({
-    mutationFn: (data: { otp: string }) =>
-      lastValueFrom(
-        this.http.post<{ data: any }>(
-          `${this.url}/api/v1/auth/verify-reset-code`,
-          data
-        )
-      ),
-    onSuccess: (res) => {
-      console.log({ res });
-    },
-    onError: (err) => {
-      console.log({ err });
-    },
-  }));
+    return {
+      mutationFn: (data: { email: string }) => {
+        email = data.email;
+        return lastValueFrom(
+          this.http.post<{ data: { reset_code: string } }>(
+            `${this.url}/api/v1/auth/send-reset-code`,
+            data
+          )
+        );
+      },
+      onSuccess: (res) => {
+        const { reset_code } = res.data;
+        console.log({ reset_code });
+        this.route.navigate([this.contants.routes.auth.verifyOTP], {
+          queryParams: { email },
+        });
+
+        this.toastr.success('OTP sent successfully');
+      },
+      onError: (err: any) => {
+        this.toastr.error(err.error.message);
+      },
+    };
+  });
+
+  verifyOTPMutation = injectMutation(() => {
+    let email = '';
+    return {
+      mutationFn: (data: { email: string; reset_code: string }) => {
+        email = data.email;
+        return lastValueFrom(
+          this.http.post<{ data: any; message: string }>(
+            `${this.url}/api/v1/auth/verify-reset-code`,
+            data
+          )
+        );
+      },
+      onSuccess: (res) => {
+        this.toastr.success(res.message);
+        this.route.navigate([this.contants.routes.auth.resetPassword], {
+          queryParams: { email },
+        });
+      },
+      onError: (err: any) => {
+        this.toastr.error(err.error.message);
+      },
+    };
+  });
 
   resetPasswordMutation = injectMutation(() => ({
     mutationFn: (data: { email: string; password: string }) =>
       lastValueFrom(
-        this.http.patch<{ data: any }>(
+        this.http.patch<{ data: any; message: string }>(
           `${this.url}/api/v1/auth/reset-password`,
           data
         )
       ),
     onSuccess: (res) => {
-      console.log({ res });
+      this.toastr.success(res.message);
+      this.route.navigate([this.contants.routes.auth.login]);
     },
-    onError: (err) => {
-      console.log({ err });
+    onError: (err: any) => {
+      this.toastr.error(err.error.message);
     },
   }));
 
   createPasswordMutation = injectMutation(() => ({
     mutationFn: (data: { new_password: string }) =>
       lastValueFrom(
-        this.http.post<{ data: any }>(
+        this.http.post<{ data: any; message: string }>(
           `${this.url}/api/v1/auth/create-password`,
           data
         )
       ),
     onSuccess: (res) => {
-      console.log({ res });
+      this.toastr.success(res.message);
+      this.route.navigate([this.contants.routes.auth.login]);
     },
-    onError: (err) => {
-      console.log({ err });
+    onError: (err: any) => {
+      this.toastr.error(err.error.message);
     },
   }));
 

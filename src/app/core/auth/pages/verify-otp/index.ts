@@ -1,1 +1,1 @@
-export * from './verify-otp.component';
+export * from './verify-otp.page';

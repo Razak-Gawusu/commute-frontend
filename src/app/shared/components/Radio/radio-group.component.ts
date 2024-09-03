@@ -20,7 +20,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
         [value]="item.value"
         [label]="item.label"
         [formGroup]="formGroup"
-        class="w-full h-28 flex justify-center"
+        class="w-full h-28 flex justify-center items-center"
       >
         <div
           *ngIf="item.icon"

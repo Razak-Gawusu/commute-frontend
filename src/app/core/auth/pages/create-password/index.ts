@@ -1,1 +1,1 @@
-export * from './create-password.component';
+export * from './create-password.page';

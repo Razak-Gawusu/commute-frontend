@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SignupFormComponent } from '../../components';
 import { RouterLink } from '@angular/router';
-import { SigninFormComponent } from '../../components/signin-form/signin-form.component';
+import { FormGroup } from '@angular/forms';
+import { AuthService } from '../../services';
+import { FormSchemaService } from '../../../../shared';
 
 @Component({
   selector: 'cm-signup',
@@ -12,7 +14,12 @@ import { SigninFormComponent } from '../../components/signin-form/signin-form.co
       <p>Manage your ward's commuting easily starting from now!</p>
     </div>
 
-    <cm-signup-form />
+    <cm-signup-form
+      [formGroup]="registerForm"
+      [isLoading]="authService.signupMutation.isPending()"
+      (registerEvent)="onRegister()"
+      [options]="authService.options"
+    />
 
     <div>
       <p class="text-gray-600">
@@ -28,5 +35,23 @@ import { SigninFormComponent } from '../../components/signin-form/signin-form.co
   standalone: true,
 })
 export class SignupPage {
-  constructor() {}
+  registerForm: FormGroup<any>;
+  authService: AuthService = inject(AuthService);
+
+  constructor(formSchema: FormSchemaService) {
+    this.registerForm = formSchema.generateForm([...formSchema.registerSchema]);
+  }
+
+  onRegister() {
+    const { first_name, last_name, email, password, role } =
+      this.registerForm.value;
+
+    this.authService.signupMutation.mutate({
+      first_name,
+      last_name,
+      email,
+      password,
+      role,
+    });
+  }
 }

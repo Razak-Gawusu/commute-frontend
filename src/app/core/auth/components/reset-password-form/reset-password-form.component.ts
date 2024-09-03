@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ButtonComponent, InputComponent } from '../../../../shared/components';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -15,42 +15,33 @@ import { AuthService } from '../../services';
   ],
   template: `<form
     (ngSubmit)="onResetPassword()"
-    [formGroup]="resetPasswordForm"
+    [formGroup]="formGroup"
     class="grid gap-4"
   >
     <cm-input
       label="Password"
       [required]="true"
+      type="password"
       name="password"
-      [formGroup]="resetPasswordForm"
+      [formGroup]="formGroup"
     />
     <cm-input
       label="Confirm Password"
       [required]="true"
       type="password"
       name="confirm_password"
-      [formGroup]="resetPasswordForm"
+      [formGroup]="formGroup"
     />
 
-    <cm-button
-      [isLoading]="authService.resetPasswordMutation.isPending()"
-      class="w-full"
-      >Save</cm-button
-    >
+    <cm-button [isLoading]="isLoading" class="w-full">Save</cm-button>
   </form>`,
 })
 export class ResetPasswordFormComponent {
-  authService: AuthService = inject(AuthService);
-  resetPasswordForm: FormGroup<any>;
-
-  constructor() {
-    this.resetPasswordForm = this.authService.loginForm;
-  }
+  @Input() formGroup!: FormGroup<any>;
+  @Input() isLoading!: boolean;
+  @Output() resetPasswordEvent = new EventEmitter();
 
   onResetPassword() {
-    const { password } = this.resetPasswordForm.value;
-    // replace with params.email
-    const email = 'mutala@gmail.com';
-    this.authService.resetPasswordMutation.mutate({ email, password });
+    this.resetPasswordEvent.emit();
   }
 }

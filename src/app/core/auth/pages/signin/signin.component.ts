@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SigninFormComponent } from '../../components';
 import { RouterLink } from '@angular/router';
+import { FormSchemaService } from '../../../../shared';
+import { FormGroup } from '@angular/forms';
+import { AuthService } from '../../services';
 
 @Component({
   selector: 'cm-signin',
@@ -11,7 +14,11 @@ import { RouterLink } from '@angular/router';
       <p class="text-sm text-gray-600">Enter email and password to login</p>
     </div>
 
-    <cm-signin-form></cm-signin-form>
+    <cm-signin-form
+      [formGroup]="loginForm"
+      [isLoading]="authService.signinMutation.isPending()"
+      (loginEvent)="onLogin()"
+    />
 
     <p class="text-gray-600 text-center">
       Forgot Password?
@@ -33,4 +40,20 @@ import { RouterLink } from '@angular/router';
   </div>`,
   imports: [SigninFormComponent, RouterLink],
 })
-export class SigninPage {}
+export class SigninPage {
+  loginForm: FormGroup<any>;
+  authService: AuthService = inject(AuthService);
+
+  constructor(formSchema: FormSchemaService) {
+    this.loginForm = formSchema.generateForm([...formSchema.loginSchema]);
+  }
+
+  onLogin() {
+    const { email, password } = this.loginForm.value;
+
+    this.authService.signinMutation.mutate({
+      email: email!,
+      password: password!,
+    });
+  }
+}

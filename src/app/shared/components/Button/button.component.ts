@@ -1,21 +1,19 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ClassValue } from 'clsx';
 import { LucideAngularModule } from 'lucide-angular';
-import { NgIf } from '@angular/common';
-import { VariantProps, cva } from 'class-variance-authority';
-import { IconComponent } from '../Icon';
-import { HelperService, ComponentStyleService } from '../../../utils';
+import { CommonModule, NgIf } from '@angular/common';
+import { VariantProps } from 'class-variance-authority';
+import { HelperService, ComponentStyleService } from '../../index';
 
 @Component({
   selector: 'cm-button',
   standalone: true,
-  imports: [LucideAngularModule, NgIf, IconComponent],
+  imports: [LucideAngularModule, NgIf, CommonModule],
   template: `
     <button
       (click)="onClick($event)"
       [type]="type"
       [disabled]="disabled"
-      [class]="cn(buttonVariants({ variant, size }), 'flex gap-2 items-center', class)"
+      [ngClass]="[buttonVariants({ variant, size }), 'flex gap-2 items-center', class]"
     >
       <lucide-icon
         *ngIf="isLoading; else show"
@@ -31,7 +29,7 @@ import { HelperService, ComponentStyleService } from '../../../utils';
 })
 export class ButtonComponent {
   buttonVariants;
-  @Input() class?: string;
+  @Input() class?: string = '';
   @Input() isLoading?: boolean;
   @Input() disabled?: boolean;
   @Input() type?: 'button' | 'submit' | 'reset' | 'menu';
@@ -48,9 +46,6 @@ export class ButtonComponent {
     this.buttonVariants = variants.buttonVariants;
   }
 
-  cn(...inputs: ClassValue[]) {
-    return this.helper.cn(inputs);
-  }
   onClick($event: any) {
     this.click.emit($event);
   }

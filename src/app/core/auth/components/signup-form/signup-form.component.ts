@@ -1,10 +1,10 @@
 import {
   Component,
+  EventEmitter,
   inject,
-  Inject,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
+  Input,
+  input,
+  Output,
 } from '@angular/core';
 import {
   ButtonComponent,
@@ -14,13 +14,7 @@ import {
 import { LucideAngularModule } from 'lucide-angular';
 import { NgFor } from '@angular/common';
 import { IUserOptions } from '../../../../interfaces';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services';
 
 @Component({
@@ -35,34 +29,34 @@ import { AuthService } from '../../services';
     ReactiveFormsModule,
   ],
   template: `<form
-    (ngSubmit)="register()"
-    [formGroup]="registerForm"
+    (ngSubmit)="onRegister()"
+    [formGroup]="formGroup"
     class="grid gap-6"
   >
     <cm-input
       label="First name"
       name="first_name"
       [required]="true"
-      [formGroup]="registerForm"
+      [formGroup]="formGroup"
     />
     <cm-input
       label="Last name"
       name="last_name"
       [required]="true"
-      [formGroup]="registerForm"
+      [formGroup]="formGroup"
     />
     <cm-input
       label="Email address"
       [required]="true"
       name="email"
-      [formGroup]="registerForm"
+      [formGroup]="formGroup"
     />
     <cm-input
       label="Password"
       [required]="true"
       type="password"
       name="password"
-      [formGroup]="registerForm"
+      [formGroup]="formGroup"
     />
 
     <cm-radio-group
@@ -70,36 +64,19 @@ import { AuthService } from '../../services';
       label="Choose what best describes your role"
       [options]="options"
       [required]="true"
-      [formGroup]="registerForm"
+      [formGroup]="formGroup"
     ></cm-radio-group>
 
-    <cm-button
-      [isLoading]="authService.signupMutation.isPending()"
-      class="w-full"
-      >Create Account</cm-button
-    >
+    <cm-button [isLoading]="isLoading" class="w-full">Create Account</cm-button>
   </form>`,
 })
 export class SignupFormComponent {
-  registerForm: FormGroup<any>;
-  options: IUserOptions[] = [];
-  authService: AuthService = inject(AuthService);
+  @Input() formGroup!: FormGroup<any>;
+  @Input() options!: IUserOptions[];
+  @Input() isLoading!: boolean;
+  @Output() registerEvent = new EventEmitter();
 
-  constructor() {
-    this.registerForm = this.authService.registerForm;
-    this.options = this.authService.options;
-  }
-
-  register() {
-    const { first_name, last_name, email, password, role } =
-      this.registerForm.value;
-
-    this.authService.signupMutation.mutate({
-      first_name,
-      last_name,
-      email,
-      password,
-      role,
-    });
+  onRegister() {
+    this.registerEvent.emit();
   }
 }

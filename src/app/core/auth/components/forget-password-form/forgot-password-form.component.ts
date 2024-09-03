@@ -1,8 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonComponent, InputComponent } from '../../../../shared/components';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
-import { AuthService } from '../../services';
 
 @Component({
   selector: 'cm-forgot-password-form',
@@ -15,33 +14,25 @@ import { AuthService } from '../../services';
   ],
   template: `<form
     (ngSubmit)="onForgotPassword()"
-    [formGroup]="forgetPasswordForm"
+    [formGroup]="formGroup"
     class="grid gap-4"
   >
     <cm-input
       label="Email address"
       [required]="true"
       name="email"
-      [formGroup]="forgetPasswordForm"
+      [formGroup]="formGroup"
     />
 
-    <cm-button
-      [isLoading]="authService.forgotPasswordMutation.isPending()"
-      class="w-full"
-      >Send OTP</cm-button
-    >
+    <cm-button [isLoading]="isLoading" class="w-full">Send OTP</cm-button>
   </form>`,
 })
 export class ForgotPasswordFormComponent {
-  authService: AuthService = inject(AuthService);
-  forgetPasswordForm: FormGroup<any>;
-
-  constructor() {
-    this.forgetPasswordForm = this.authService.loginForm;
-  }
+  @Input() formGroup!: FormGroup<any>;
+  @Input() isLoading!: boolean;
+  @Output() forgotPasswordEvent = new EventEmitter();
 
   onForgotPassword() {
-    const { email, password } = this.forgetPasswordForm.value;
-    this.authService.forgotPasswordMutation.mutate({ email });
+    this.forgotPasswordEvent.emit();
   }
 }

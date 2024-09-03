@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ButtonComponent, InputComponent } from '../../../../shared/components';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
 import { AuthService } from '../../services';
+import { ResendCodeCountdownComponent } from '../resend-otp';
 
 @Component({
   selector: 'cm-verify-otp-form',
@@ -12,36 +13,35 @@ import { AuthService } from '../../services';
     ButtonComponent,
     ReactiveFormsModule,
     LucideAngularModule,
+    ResendCodeCountdownComponent,
   ],
   template: `<form
     (ngSubmit)="onVerifyOTP()"
-    [formGroup]="verifyOTPForm"
+    [formGroup]="formGroup"
     class="grid gap-4"
   >
     <cm-input
       label="OTP code"
       [required]="true"
-      name="otp"
-      [formGroup]="verifyOTPForm"
+      name="reset_code"
+      [formGroup]="formGroup"
     />
 
-    <cm-button
-      [isLoading]="authService.forgotPasswordMutation.isPending()"
-      class="w-full"
-      >Verify OTP</cm-button
-    >
+    <cm-resend-code-countdown (resendCodeEvent)="onResendOTP()" />
+
+    <cm-button [isLoading]="isLoading" class="w-full">Verify OTP</cm-button>
   </form>`,
 })
-export class VerifyOTPormComponent {
-  authService: AuthService = inject(AuthService);
-  verifyOTPForm: FormGroup<any>;
-
-  constructor() {
-    this.verifyOTPForm = this.authService.verifyOTPForm;
-  }
+export class VerifyOTPFormComponent {
+  @Input() formGroup!: FormGroup<any>;
+  @Input() isLoading!: boolean;
+  @Output() verifyOTPEvent = new EventEmitter();
+  @Output() resendOTPEvent = new EventEmitter();
 
   onVerifyOTP() {
-    const { otp } = this.verifyOTPForm.value;
-    this.authService.verifyOTPMutation.mutate({ otp });
+    this.verifyOTPEvent.emit();
+  }
+  onResendOTP() {
+    this.resendOTPEvent.emit();
   }
 }

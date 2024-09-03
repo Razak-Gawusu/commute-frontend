@@ -24,9 +24,16 @@ export class UserService {
   currentUser = this.userSource.asObservable();
 
   authenticate(token: string) {
-    const decoded: IUser = jwtDecode(token);
-    localStorage.setItem('commute-user', JSON.stringify({ ...decoded, token }));
-    this.userSource.next({ ...decoded, token });
+    try {
+      const decoded: IUser = jwtDecode(token);
+      localStorage.setItem(
+        'commute-user',
+        JSON.stringify({ ...decoded, token })
+      );
+      this.userSource.next({ ...decoded, token });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   getToken() {

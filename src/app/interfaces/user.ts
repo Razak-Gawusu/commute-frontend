@@ -6,3 +6,9 @@ export interface IUser {
   role?: string | null;
   token?: string | null;
 }
+
+export enum Role {
+  ADMIN = 'admin',
+  PARENT = 'parent',
+  DRIVER = 'driver',
+}

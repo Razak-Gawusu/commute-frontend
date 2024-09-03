@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ButtonComponent, InputComponent } from '../../../../shared/components';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LucideAngularModule } from 'lucide-angular';
@@ -15,40 +15,32 @@ import { AuthService } from '../../services';
   ],
   template: `<form
     (ngSubmit)="onCreatePassword()"
-    [formGroup]="createPasswordForm"
+    [formGroup]="formGroup"
     class="grid gap-4"
   >
     <cm-input
       label="Password"
       [required]="true"
       name="new_password"
-      [formGroup]="createPasswordForm"
+      [formGroup]="formGroup"
     />
     <cm-input
       label="Confirm Password"
       [required]="true"
       type="password"
       name="confirm_password"
-      [formGroup]="createPasswordForm"
+      [formGroup]="formGroup"
     />
 
-    <cm-button
-      [isLoading]="authService.createPasswordMutation.isPending()"
-      class="w-full"
-      >Save</cm-button
-    >
+    <cm-button [isLoading]="isLoading" class="w-full">Save</cm-button>
   </form>`,
 })
 export class CreatePasswordFormComponent {
-  authService: AuthService = inject(AuthService);
-  createPasswordForm: FormGroup<any>;
-
-  constructor() {
-    this.createPasswordForm = this.authService.createPasswordForm;
-  }
+  @Input() formGroup!: FormGroup<any>;
+  @Input() isLoading!: boolean;
+  @Output() createPasswordEvent = new EventEmitter();
 
   onCreatePassword() {
-    const { new_password } = this.createPasswordForm.value;
-    this.authService.createPasswordMutation.mutate({ new_password });
+    this.createPasswordEvent.emit();
   }
 }

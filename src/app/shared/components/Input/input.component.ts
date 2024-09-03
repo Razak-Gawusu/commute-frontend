@@ -62,7 +62,7 @@ export class InputComponent implements OnInit {
   @Input() formGroup!: FormGroup<any>;
   @Input({ required: true }) label!: string;
   @Input() required?: boolean;
-  @Input() type?: 'text' | 'password' | 'email' | 'button';
+  @Input() type?: 'text' | 'password' | 'email' | 'button' = 'text';
   @Input() error?: boolean;
   isPassword: boolean = false;
   showPassword: boolean = false;
