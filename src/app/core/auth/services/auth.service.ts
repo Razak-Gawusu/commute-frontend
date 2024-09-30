@@ -6,23 +6,24 @@ import {
   injectQueryClient,
   injectMutation,
 } from '@tanstack/angular-query-experimental';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ContantService, UserService } from '../../../shared';
+import { ConstantService, UserService } from '../../../shared';
 import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  url = 'https://commute-backend-3a0o.onrender.com';
+  // url = 'https://commute-backend-3a0o.onrender.com';
+  url = 'http://localhost:8080';
 
   queryClient = injectQueryClient();
   constructor(
     private http: HttpClient,
     private fb: FormBuilder,
     private route: Router,
-    private contants: ContantService,
+    private constants: ConstantService,
     private userService: UserService,
     private toastr: ToastrService
   ) {}
@@ -44,7 +45,7 @@ export class AuthService {
       const { token, message } = res;
       this.toastr.success(message);
       this.userService.authenticate(token);
-      this.route.navigate([this.getRoute(this.userService.getRole())]);
+      this.route.navigate([this.getRoute(this.userService.role)]);
     },
     onError: (err: any) => {
       this.toastr.error(err.error.message);
@@ -63,7 +64,8 @@ export class AuthService {
       const { token, message } = res;
       this.toastr.success(message);
       this.userService.authenticate(token);
-      this.route.navigate([this.getRoute(this.userService.getRole())]);
+      console.log(this.getRoute(this.userService.role));
+      this.route.navigate([this.getRoute(this.userService.role)]);
     },
     onError: (err: any) => {
       this.toastr.error(err?.error?.message);
@@ -86,7 +88,7 @@ export class AuthService {
       onSuccess: (res) => {
         const { reset_code } = res.data;
         console.log({ reset_code });
-        this.route.navigate([this.contants.routes.auth.verifyOTP], {
+        this.route.navigate([this.constants.routes.auth.verifyOTP], {
           queryParams: { email },
         });
 
@@ -112,7 +114,7 @@ export class AuthService {
       },
       onSuccess: (res) => {
         this.toastr.success(res.message);
-        this.route.navigate([this.contants.routes.auth.resetPassword], {
+        this.route.navigate([this.constants.routes.auth.resetPassword], {
           queryParams: { email },
         });
       },
@@ -132,7 +134,7 @@ export class AuthService {
       ),
     onSuccess: (res) => {
       this.toastr.success(res.message);
-      this.route.navigate([this.contants.routes.auth.login]);
+      this.route.navigate([this.constants.routes.auth.login]);
     },
     onError: (err: any) => {
       this.toastr.error(err.error.message);
@@ -149,7 +151,7 @@ export class AuthService {
       ),
     onSuccess: (res) => {
       this.toastr.success(res.message);
-      this.route.navigate([this.contants.routes.auth.login]);
+      this.route.navigate([this.constants.routes.auth.login]);
     },
     onError: (err: any) => {
       this.toastr.error(err.error.message);
@@ -174,19 +176,21 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('commute-user');
-    this.route.navigate([this.contants.routes.auth.login]);
+    this.route.navigate([this.constants.routes.auth.login]);
   }
 
   getRoute(type?: string | null) {
     switch (type) {
+      case 'super_admin':
+        return this.constants.routes.super_admin.dashboard;
       case 'driver':
-        return this.contants.routes.user.driver.dashboard;
+        return this.constants.routes.user.driver.dashboard;
       case 'admin':
-        return this.contants.routes.user.school.dashboard;
+        return this.constants.routes.user.school.dashboard;
       case 'parent':
-        return this.contants.routes.user.parent.dashboard;
+        return this.constants.routes.user.parent.dashboard;
       default:
-        return this.contants.routes.auth.login;
+        return this.constants.routes.auth.login;
     }
   }
 }

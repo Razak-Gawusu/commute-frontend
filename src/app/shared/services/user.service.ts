@@ -1,4 +1,4 @@
-import { Injectable, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { IUser } from '../../interfaces';
 import { jwtDecode } from 'jwt-decode';
@@ -17,7 +17,7 @@ export class UserService {
     first_name: null,
     last_name: null,
     email: null,
-    role: null,
+    role: '',
     token: null,
   });
 
@@ -36,18 +36,27 @@ export class UserService {
     }
   }
 
-  getToken() {
+  get fullName() {
+    const { first_name, last_name } = this.userSource.getValue();
+    return `Gawusu Razak`;
+  }
+
+  get email() {
+    const { email } = this.userSource.getValue();
+    return email;
+  }
+
+  get token(): any {
     const { token } = this.userSource.getValue();
     return token;
   }
-
-  getRole() {
-    const { role } = this.userSource.getValue();
-    return role;
-  }
-
-  setToken(token: string) {
+  set token(token: string) {
     const currentUser = this.userSource.getValue();
     this.userSource.next({ ...currentUser, token });
+  }
+
+  get role() {
+    const { role } = this.userSource.getValue();
+    return role;
   }
 }

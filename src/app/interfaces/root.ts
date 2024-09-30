@@ -4,3 +4,9 @@ export interface IUserOptions {
   name: string;
   icon: string;
 }
+
+export type NavItem = {
+  label: string;
+  path: string;
+  iconName: string;
+};

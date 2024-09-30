@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { AvatarComponent } from '../Avatar/avatar.component';
+import { TagComponent } from '../Tag/tag.component';
 
 @Component({
   selector: 'cm-user-tag',
   standalone: true,
-  imports: [AvatarComponent],
+  imports: [AvatarComponent, TagComponent],
   template: `
     <div
       class="w-full p-4 border border-amber-800 bg-amber-800/20 flex items-center justify-between rounded-lg"
@@ -18,11 +19,7 @@ import { AvatarComponent } from '../Avatar/avatar.component';
         </div>
       </div>
 
-      <div
-        class="bg-amber-800 text-white text-sm px-3 py-1 rounded-md capitalize"
-      >
-        driver
-      </div>
+      <cm-tag role="driver" />
     </div>
   `,
 })

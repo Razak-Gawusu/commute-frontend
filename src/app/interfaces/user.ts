@@ -3,7 +3,7 @@ export interface IUser {
   last_name: string | null;
   email: string | null;
   password?: string | null;
-  role?: string | null;
+  role: any;
   token?: string | null;
 }
 

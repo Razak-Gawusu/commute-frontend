@@ -1,9 +1,21 @@
 import { Routes } from '@angular/router';
-import { DashboardPage } from '../pages';
+import { AdminDasboardLayout } from '../../../admin/components';
+import {
+  DriverDashboardPage,
+  DriverProfilePage,
+  DriverSettingsPage,
+  DriverTripsPage,
+} from '../pages';
 
 export const driverRoutes: Routes = [
   {
     path: 'user/driver/dashboard',
-    component: DashboardPage,
+    component: AdminDasboardLayout,
+    children: [
+      { path: '', component: DriverDashboardPage },
+      { path: 'profile', component: DriverProfilePage },
+      { path: 'trips', component: DriverTripsPage },
+      { path: 'settings', component: DriverSettingsPage },
+    ],
   },
 ];

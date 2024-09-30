@@ -24,6 +24,8 @@ import { HelperService, ComponentStyleService } from '../../index';
       <ng-template #show>
         <ng-content></ng-content>
       </ng-template>
+
+      <lucide-icon *ngIf="iconName" [name]="iconName" />
     </button>
   `,
 })
@@ -34,6 +36,8 @@ export class ButtonComponent {
   @Input() disabled?: boolean;
   @Input() type?: 'button' | 'submit' | 'reset' | 'menu';
   @Input() size?: VariantProps<typeof this.variants.buttonVariants>['size'];
+  @Input() iconName?: string;
+  @Input() iconPosition?: 'left' | 'right' = 'left';
   @Input() variant?: VariantProps<
     typeof this.variants.buttonVariants
   >['variant'];

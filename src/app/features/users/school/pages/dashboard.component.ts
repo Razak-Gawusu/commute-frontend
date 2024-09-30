@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'cm-dashboard-school',
+  selector: 'cm-school-dashboard',
   standalone: true,
   imports: [],
   template: ` <div>School Dashboard</div> `,
 })
-export class DashboardPage {}
+export class SchoolDashboardPage {}
