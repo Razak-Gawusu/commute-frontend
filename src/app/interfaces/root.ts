@@ -10,3 +10,10 @@ export type NavItem = {
   path: string;
   iconName: string;
 };
+
+export type UserEntities = 'drivers' | 'parents' | 'schools' | 'trips';
+
+export type Analytic = {
+  name: UserEntities;
+  count: number;
+};
