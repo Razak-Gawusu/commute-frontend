@@ -1,37 +1,24 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { IUser, IUserOptions } from '../../../interfaces';
-import { lastValueFrom } from 'rxjs';
-import {
-  injectQueryClient,
-  injectMutation,
-} from '@tanstack/angular-query-experimental';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ContantService, UserService } from '../../../shared';
-import { ToastrService } from 'ngx-toastr';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {IUser, IUserOptions} from '../../../interfaces';
+import {lastValueFrom} from 'rxjs';
+import {injectMutation, injectQueryClient,} from '@tanstack/angular-query-experimental';
+import {FormBuilder} from '@angular/forms';
+import {Router} from '@angular/router';
+import {ContantService, UserService} from '../../../shared';
+import {ToastrService} from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  url = 'https://commute-backend-3a0o.onrender.com';
+  url = 'http://localhost:8080';
 
   queryClient = injectQueryClient();
-  constructor(
-    private http: HttpClient,
-    private fb: FormBuilder,
-    private route: Router,
-    private contants: ContantService,
-    private userService: UserService,
-    private toastr: ToastrService
-  ) {}
-
   options: IUserOptions[] = [
-    { name: 'role', label: 'School', value: 'admin', icon: 'school' },
-    { name: 'role', label: 'Driver', value: 'driver', icon: 'carTaxiFront' },
+    {name: 'role', label: 'School', value: 'admin', icon: 'school'},
+    {name: 'role', label: 'Driver', value: 'driver', icon: 'carTaxiFront'},
   ];
-
   signupMutation = injectMutation(() => ({
     mutationFn: (user: IUser) =>
       lastValueFrom(
@@ -41,7 +28,7 @@ export class AuthService {
         )
       ),
     onSuccess: (res) => {
-      const { token, message } = res;
+      const {token, message} = res;
       this.toastr.success(message);
       this.userService.authenticate(token);
       this.route.navigate([this.getRoute(this.userService.getRole())]);
@@ -50,7 +37,6 @@ export class AuthService {
       this.toastr.error(err.error.message);
     },
   }));
-
   signinMutation = injectMutation(() => ({
     mutationFn: (data: { email: string; password: string }) =>
       lastValueFrom(
@@ -60,7 +46,7 @@ export class AuthService {
         )
       ),
     onSuccess: (res) => {
-      const { token, message } = res;
+      const {token, message} = res;
       this.toastr.success(message);
       this.userService.authenticate(token);
       this.route.navigate([this.getRoute(this.userService.getRole())]);
@@ -69,7 +55,6 @@ export class AuthService {
       this.toastr.error(err?.error?.message);
     },
   }));
-
   forgotPasswordMutation = injectMutation(() => {
     let email = '';
 
@@ -84,10 +69,10 @@ export class AuthService {
         );
       },
       onSuccess: (res) => {
-        const { reset_code } = res.data;
-        console.log({ reset_code });
+        const {reset_code} = res.data;
+        console.log({reset_code});
         this.route.navigate([this.contants.routes.auth.verifyOTP], {
-          queryParams: { email },
+          queryParams: {email},
         });
 
         this.toastr.success('OTP sent successfully');
@@ -97,7 +82,6 @@ export class AuthService {
       },
     };
   });
-
   verifyOTPMutation = injectMutation(() => {
     let email = '';
     return {
@@ -113,7 +97,7 @@ export class AuthService {
       onSuccess: (res) => {
         this.toastr.success(res.message);
         this.route.navigate([this.contants.routes.auth.resetPassword], {
-          queryParams: { email },
+          queryParams: {email},
         });
       },
       onError: (err: any) => {
@@ -121,7 +105,6 @@ export class AuthService {
       },
     };
   });
-
   resetPasswordMutation = injectMutation(() => ({
     mutationFn: (data: { email: string; password: string }) =>
       lastValueFrom(
@@ -138,7 +121,6 @@ export class AuthService {
       this.toastr.error(err.error.message);
     },
   }));
-
   createPasswordMutation = injectMutation(() => ({
     mutationFn: (data: { new_password: string }) =>
       lastValueFrom(
@@ -155,7 +137,6 @@ export class AuthService {
       this.toastr.error(err.error.message);
     },
   }));
-
   changePasswordMutation = injectMutation(() => ({
     mutationFn: (data: { current_password: string; new_password: string }) =>
       lastValueFrom(
@@ -165,12 +146,22 @@ export class AuthService {
         )
       ),
     onSuccess: (res) => {
-      console.log({ res });
+      console.log({res});
     },
     onError: (err) => {
-      console.log({ err });
+      console.log({err});
     },
   }));
+
+  constructor(
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private route: Router,
+    private contants: ContantService,
+    private userService: UserService,
+    private toastr: ToastrService
+  ) {
+  }
 
   logout() {
     localStorage.removeItem('commute-user');
