@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { AnalyticListComponent } from '../../components/Analytics/analytics-list.component';
-import { Analytic } from '../../../interfaces';
-import { LineGraphComponent } from '../../components/Analytics/line-graph.component';
-import { PieChartComponent } from '../../components/Analytics/pie-chart.component';
+import {
+  AnalyticListComponent,
+  LineGraphComponent,
+  PieChartComponent,
+} from '../../../components';
+import { Analytic } from '../../../../interfaces';
 
 @Component({
   selector: 'cm-super-admin-dashboard',

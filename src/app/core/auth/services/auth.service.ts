@@ -6,7 +6,6 @@ import {
   injectQueryClient,
   injectMutation,
 } from '@tanstack/angular-query-experimental';
-import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConstantService, UserService } from '../../../shared';
 import { ToastrService } from 'ngx-toastr';
@@ -21,7 +20,6 @@ export class AuthService {
   queryClient = injectQueryClient();
   constructor(
     private http: HttpClient,
-    private fb: FormBuilder,
     private route: Router,
     private constants: ConstantService,
     private userService: UserService,
@@ -68,6 +66,7 @@ export class AuthService {
       this.route.navigate([this.getRoute(this.userService.role)]);
     },
     onError: (err: any) => {
+      console.log(err);
       this.toastr.error(err?.error?.message);
     },
   }));

@@ -5,3 +5,4 @@ export * from './UserTag';
 export * from './Avatar';
 export * from './Tag';
 export * from './Menu';
+export * from './Table';

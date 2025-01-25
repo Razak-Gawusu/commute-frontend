@@ -3,7 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
+:root{
+    --primary: #78350f33;
+}
+
 
 body{
     font-family: "Cantarell", sans-serif;
 }
+
+

@@ -29,19 +29,20 @@ import { MenuItem } from 'primeng/api';
   styles: [
     `
       .active-link {
-        background-color: #b45309;
+        background-color: rgb(120 53 15/0.85);
+        color: white;
         border-radius: 20px;
       }
     `,
   ],
   template: `
     <div [ngClass]="['w-full h-screen grid grid-cols-[270px_1fr]']">
-      <div class="group/sidebar bg-amber-900 flex flex-col justify-between">
+      <div class="group/sidebar bg-amber-900/20 flex flex-col justify-between">
         <div class="flex flex-col h-full justify-start">
           <div
-            class="relative h-20 flex px-5 items-center justify-between border-b border-amber-800"
+            class="relative h-20 flex px-5 py-7 items-center justify-between border-b border-amber-900/40"
           >
-            <span class="text-white text-lg font-fjalla">Commute</span>
+            <span class="text-amber-950 text-lg font-fjalla">Commute</span>
 
             <cm-tag [role]="userService.role" />
 
@@ -59,7 +60,7 @@ import { MenuItem } from 'primeng/api';
               [routerLinkActiveOptions]="{ exact: true }"
               routerLinkActive="active-link"
               [ngClass]="{
-                'flex gap-4 items-center px-4 py-2 hover:rounded-full hover:bg-amber-700 text-white': true,
+                'flex gap-4 items-center px-4 py-2 hover:rounded-full hover:bg-amber-900/85 hover:text-white text-amber-950': true,
                 'last:mt-auto': userService.role !== 'super_admin',
                 '[&:nth-last-child(2)]:mt-auto': userService.role === 'super_admin',
               }"
@@ -72,7 +73,9 @@ import { MenuItem } from 'primeng/api';
       </div>
 
       <div class="">
-        <header class="h-20 flex justify-between items-center px-5 border-b">
+        <header
+          class="h-20 flex justify-between items-center px-5 border-b border-amber-900/40"
+        >
           <h1 class="text-xl font-semibold capitalize font-fjalla">
             {{ dashboardTitle }}
           </h1>

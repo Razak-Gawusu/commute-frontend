@@ -18,17 +18,17 @@ import { UserEntities } from '../../../interfaces';
   imports: [LucideAngularModule, AnalyticTotalPipe, CommonModule, RouterModule],
   template: `
     <div
-      class="w-72 border border-amber-700/20 p-4 rounded flex flex-col gap-4"
+      class="w-72 border border-amber-900/20 p-4 rounded flex flex-col gap-4"
     >
       <div
-        class="w-10 h-10 grid place-items-center bg-amber-200/50 rounded-full"
+        class="w-10 h-10 grid place-items-center bg-amber-900/20 rounded-full"
       >
-        <lucide-icon [name]="icon" color="#78350f" />
+        <lucide-icon [name]="icon" color="rgb(120 53 15 / 0.9)" />
       </div>
       <div class="flex justify-between items-end">
         <div class="flex flex-col">
           <span>{{ name | analyticTotalPipe }}</span>
-          <span class="text-4xl text-amber-700">
+          <span class="text-4xl text-amber-900">
             {{ count | number }}
           </span>
         </div>

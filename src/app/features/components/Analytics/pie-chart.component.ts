@@ -13,7 +13,11 @@ import { Chart } from 'chart.js/auto';
       }
     `,
   ],
-  template: `<div class=" self-stretch h-full rounded-md">
+  template: `<div
+    class=" self-stretch h-full rounded-md p-4 border border-amber-900/20 flex flex-col justify-between"
+  >
+    <h1>Users</h1>
+
     <canvas id="canvas_pie">{{ chart }}</canvas>
   </div>`,
 })
@@ -31,9 +35,18 @@ export class PieChartComponent {
         {
           label: 'Users',
           data: [20, 200, 50],
-          backgroundColor: ['#92400e', '#d97706', '#fbbf24'],
-          borderColor: ['#92400e', '#d97706', '#fbbf24'],
-          hoverOffset: 4,
+          backgroundColor: [
+            'rgb(120 53 15 / 0.4)',
+            'rgb(120 53 15 / 0.6)',
+            'rgb(120 53 15 / 0.8)',
+          ],
+          borderColor: [
+            'rgb(120 53 15 / 0.4)',
+            'rgb(120 53 15 / 0.6)',
+            'rgb(120 53 15 / 0.8)',
+          ],
+          borderWidth: 1,
+          hoverOffset: 5,
         },
       ],
     };

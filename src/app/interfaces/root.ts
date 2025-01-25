@@ -17,3 +17,8 @@ export type Analytic = {
   name: UserEntities;
   count: number;
 };
+
+export type Column = {
+  header: string;
+  accessor: string;
+};

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+
 import { MenuModule } from 'primeng/menu';
 import { LucideAngularModule } from 'lucide-angular';
 

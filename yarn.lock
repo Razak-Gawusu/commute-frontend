@@ -1790,10 +1790,23 @@
     "@tanstack/query-core" "5.56.2"
     tslib "^2.6.3"
 
+"@tanstack/angular-table@^8.20.5":
+  version "8.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/angular-table/-/angular-table-8.20.5.tgz#fe61e8db4c4f7582e697426d3990313276b54d6c"
+  integrity sha512-VjfUVDS5qUSr3fo5y13QObNmM4w4fwUXzgmS3Q7l7iHtaemCCie4T3w0b4n5jRpskOZrWOHIF5HBszo9NMAycA==
+  dependencies:
+    "@tanstack/table-core" "8.20.5"
+    tslib "^2.6.2"
+
 "@tanstack/query-core@5.56.2":
   version "5.56.2"
   resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-5.56.2.tgz"
   integrity sha512-gor0RI3/R5rVV3gXfddh1MM+hgl0Z4G7tj6Xxpq6p2I03NGPaJ8dITY9Gz05zYYb/EJq9vPas/T4wn9EaDPd4Q==
+
+"@tanstack/table-core@8.20.5":
+  version "8.20.5"
+  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.20.5.tgz#3974f0b090bed11243d4107283824167a395cf1d"
+  integrity sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==
 
 "@tufjs/canonical-json@2.0.0":
   version "2.0.0"
@@ -6273,7 +6286,7 @@ tslib@2.6.2, tslib@^2.1.0, tslib@^2.3.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.6.2.tgz"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
-tslib@^2.6.3:
+tslib@^2.6.2, tslib@^2.6.3:
   version "2.7.0"
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.7.0.tgz"
   integrity sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==
