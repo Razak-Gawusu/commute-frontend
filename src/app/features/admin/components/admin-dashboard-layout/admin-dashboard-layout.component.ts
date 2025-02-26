@@ -3,13 +3,11 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core';
 import {
-  ConstantService,
   SidebarService,
   UserService,
 } from '../../../../shared';
 import { TagComponent } from '../../../../shared/components/Tag/tag.component';
 import { LucideAngularModule } from 'lucide-angular';
-import { ButtonComponent } from '../../../../shared/components/Button/button.component';
 import { AvatarComponent } from '../../../../shared/components/Avatar/avatar.component';
 import { MenuComponent } from '../../../../shared/components/Menu/menu.component';
 import { MenuItem } from 'primeng/api';
@@ -22,7 +20,6 @@ import { MenuItem } from 'primeng/api';
     CommonModule,
     TagComponent,
     LucideAngularModule,
-    ButtonComponent,
     AvatarComponent,
     MenuComponent,
   ],
